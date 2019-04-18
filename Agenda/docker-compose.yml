@@ -1,0 +1,68 @@
+version: '3'
+services:
+  mysqldb:
+    image: mysql:5.7
+    container_name: mysqldb
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: agenda-cadastro
+    volumes:
+      - dbdata:/var/lib/mysql
+  
+  config-server:
+    container_name: config-server
+    build: ./agenda-config-server
+    ports:
+      - "9090:9090"
+  
+  eureka-server:
+    container_name: eureka-server
+    build: ./agenda-eureka-server
+    ports:
+      - "9091:9091"
+    depends_on:
+      - config-server
+      
+
+  agenda-cadastro:
+    container_name: agenda-cadastro
+    build: ./agenda-cadastro-server
+    ports:
+      - "9092:9092"
+    depends_on:
+      - config-server
+      - eureka-server
+      - mysqldb
+    environment:
+      DB_PORT: 3306
+      DB_HOST: mysqldb
+      DB_DATABASE: agenda-cadastro
+      DB_USERNAME: root
+      DB_PASSWORD: root
+
+  dashboard-server:
+    container_name: dashboard-server
+    build: ./agenda-cadastro-dashboard-server
+    ports:
+      - "9093:9093"
+    depends_on:
+      - config-server
+      - eureka-server
+      - agenda-cadastro
+    
+  gateway-server:
+    container_name: gateway-server
+    build: ./agenda-gateway-server
+    ports:
+      - "9094:9094"
+    depends_on:
+      - config-server
+      - eureka-server
+      - agenda-cadastro
+      - dashboard-server
+
+volumes:
+  dbdata:

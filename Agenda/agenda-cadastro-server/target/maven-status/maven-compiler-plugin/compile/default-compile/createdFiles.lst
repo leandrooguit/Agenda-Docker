@@ -1,0 +1,9 @@
+br\com\ufpe\agenda\model\Contato.class
+br\com\ufpe\agenda\model\ContatoDto.class
+br\com\ufpe\agenda\AgendaCadastroServerApplication.class
+br\com\ufpe\agenda\repository\ContatoRepository.class
+br\com\ufpe\agenda\service\ContatoService.class
+br\com\ufpe\agenda\exception\ExceptionHandlerController.class
+br\com\ufpe\agenda\controller\ContatoController.class
+br\com\ufpe\agenda\model\Telefone.class
+br\com\ufpe\agenda\model\ContatoDto$TelefoneDto.class

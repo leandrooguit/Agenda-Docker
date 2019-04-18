@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: agenda-eureka-server
+  cloud:
+    config:
+      uri: http://config-server:9090
