@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import br.com.ufpe.agenda.model.ContatoDtoInfo;
 
-@FeignClient(name = "agenda-cadastro")
-@RibbonClient(name = "agenda-cadastro")
+@FeignClient(name = "agenda-cadastro-service")
+@RibbonClient(name = "agenda-cadastro-service")
 public interface ContatoServiceProxy {
 
 	@RequestMapping(value = "/api/contatos", method = RequestMethod.POST)
