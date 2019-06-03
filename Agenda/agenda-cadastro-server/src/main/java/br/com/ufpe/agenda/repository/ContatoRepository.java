@@ -1,9 +1,15 @@
 package br.com.ufpe.agenda.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.ufpe.agenda.model.Contato;
 
-public interface ContatoRepository extends CrudRepository<Contato, Integer> {
+public interface ContatoRepository extends JpaRepository<Contato, Integer> {
 
+	Optional<Contato> findByEmail(String email);
+	
+	Optional<Contato> findById(Integer id);
+	
 }

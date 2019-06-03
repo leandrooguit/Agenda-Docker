@@ -13,13 +13,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-@Entity
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Entity(name = "Telefone")
 @Table(name = "Telefone")
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Telefone implements Serializable {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "Id")
+	@EqualsAndHashCode.Include
 	private Integer id;
 	
 	@NotNull(message = "O número é obrigatório.")
@@ -34,36 +40,4 @@ public class Telefone implements Serializable {
 	@JoinColumn(name = "Contato_Id", nullable = false)
 	private Contato contato;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Integer getNumero() {
-		return numero;
-	}
-
-	public void setNumero(Integer numero) {
-		this.numero = numero;
-	}
-
-	public Integer getDdd() {
-		return ddd;
-	}
-
-	public void setDdd(Integer ddd) {
-		this.ddd = ddd;
-	}
-
-	public Contato getContato() {
-		return contato;
-	}
-
-	public void setContato(Contato contato) {
-		this.contato = contato;
-	}
-	
 }

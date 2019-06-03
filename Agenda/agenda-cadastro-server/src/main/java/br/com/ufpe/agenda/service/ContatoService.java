@@ -1,16 +1,15 @@
 package br.com.ufpe.agenda.service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import br.com.ufpe.agenda.exception.NegocioException;
 import br.com.ufpe.agenda.model.Contato;
-import br.com.ufpe.agenda.model.ContatoDto;
-import br.com.ufpe.agenda.model.Telefone;
 import br.com.ufpe.agenda.repository.ContatoRepository;
 
 @Service
@@ -19,63 +18,43 @@ public class ContatoService {
 	@Autowired
 	private ContatoRepository contatoRepository;
 	
-	public Contato save(@Validated Contato contato) {
+	public Contato save(@Validated Contato contato) throws NegocioException {
+		Optional<Contato> contatoBase = contatoRepository.findByEmail(contato.getEmail());
+		
+		if (contatoBase.isPresent()) {
+			throw new NegocioException("e-mail.existente", HttpStatus.BAD_REQUEST);
+		}
+		
 		contato.setDataCadastro(new Date());
-        return contatoRepository.save(contato);
+        return contatoRepository.saveAndFlush(contato);
     }
 	
-	public Contato findById(Integer id){
-        return contatoRepository.findOne(id);
+	public void update(Contato contato) throws NegocioException {
+		Contato contatoBase = findById(contato.getId());
+		contatoBase.setNome(contato.getNome());
+		contatoBase.setEmail(contato.getEmail());
+		contatoBase.setDataCadastro(new Date());
+		contatoBase.getTelefones().addAll(contato.getTelefones());
+		contatoRepository.saveAndFlush(contato);
+	}
+	
+	public Contato findById(Integer id) throws NegocioException {
+		Optional<Contato> contato =  contatoRepository.findById(id);
+		
+		if (!contato.isPresent()) {
+			throw new NegocioException("nao-encontrado", HttpStatus.BAD_REQUEST);
+		}
+		
+		return contato.get();
     }
 	
 	public Iterable<Contato> findAll(){
         return contatoRepository.findAll();
     }
 	
-	public void delete(Integer id) {
-        contatoRepository.delete(id);
+	public void delete(Integer id) throws NegocioException {
+		Contato contato = findById(id);
+        contatoRepository.delete(contato);
     }
-	
-	public Contato converterToContato(ContatoDto dto) {
-		Contato contato = new Contato();
-		contato.setNome(dto.getNome());
-		contato.setEmail(dto.getEmail());
-		List<Telefone> telefones = new ArrayList<Telefone>();
-		for (ContatoDto.TelefoneDto telefoneDto : dto.getTelefones()) {
-			Telefone telefone = new Telefone();
-			telefone.setNumero(telefoneDto.getNumero());
-			telefone.setDdd(telefoneDto.getDdd());
-			telefone.setContato(contato);
-			telefones.add(telefone);
-		}
-		contato.setTelefones(telefones);
-		return contato;
-	}
-	
-	public ContatoDto converterToContatoDto(Contato contato) {
-		ContatoDto contatoDto = new ContatoDto();
-		contatoDto.setId(contato.getId());
-		contatoDto.setNome(contato.getNome());
-		contatoDto.setEmail(contato.getEmail());
-		List<ContatoDto.TelefoneDto> telefonesDto = new ArrayList<ContatoDto.TelefoneDto>();
-		for (Telefone telefone : contato.getTelefones()) {
-			ContatoDto.TelefoneDto telefoneDto = new ContatoDto.TelefoneDto();
-			telefoneDto.setId(telefone.getId());
-			telefoneDto.setNumero(telefone.getNumero());
-			telefoneDto.setDdd(telefone.getDdd());
-			telefonesDto.add(telefoneDto);
-		}
-		contatoDto.setTelefones(telefonesDto);
-		return contatoDto;
-	}
-	
-	public List<ContatoDto> converterToContatoDto(Iterable<Contato> contatos) {
-		List<ContatoDto> contatosDto = new ArrayList<ContatoDto>();
-		for (Contato contato : contatos) {
-			ContatoDto contatoDto = converterToContatoDto(contato);
-			contatosDto.add(contatoDto);
-		}
-		return contatosDto;
-	}
 	
 }
