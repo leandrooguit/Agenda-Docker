@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: gateway-server
+  name: gateway-server
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: gateway-server
+    spec:
+      containers:
+      - image: gateway-server
+        name: gateway-server
+        ports:
+        - containerPort: 9094
+        resources: {}
+      restartPolicy: Always
+status: {}

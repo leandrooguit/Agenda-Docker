@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: agenda-cadastro
+  name: agenda-cadastro
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: agenda-cadastro
+    spec:
+      containers:
+      - env:
+        - name: DB_DATABASE
+          value: agenda-cadastro
+        - name: DB_HOST
+          value: mysqldb
+        - name: DB_PASSWORD
+          value: root
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_USERNAME
+          value: root
+        image: agenda-cadastro
+        name: agenda-cadastro
+        ports:
+        - containerPort: 9092
+        resources: {}
+      restartPolicy: Always
+status: {}
