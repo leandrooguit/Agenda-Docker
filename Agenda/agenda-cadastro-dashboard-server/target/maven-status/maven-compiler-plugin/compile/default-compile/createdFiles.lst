@@ -1,0 +1,5 @@
+br\com\ufpe\agenda\service\ContatoServiceProxy.class
+br\com\ufpe\agenda\model\ContatoDtoInfo$TelefoneDtoInfo.class
+br\com\ufpe\agenda\AgendaCadastroDashboardServerApplication.class
+br\com\ufpe\agenda\controller\FeignContatoInfoController.class
+br\com\ufpe\agenda\model\ContatoDtoInfo.class
