@@ -15,12 +15,14 @@ services:
   config-server:
     container_name: config-server
     build: ./agenda-config-server
+    restart: on-failure
     ports:
       - "9090:9090"
   
   eureka-server:
     container_name: eureka-server
     build: ./agenda-eureka-server
+    restart: on-failure
     ports:
       - "9091:9091"
     depends_on:
@@ -30,6 +32,7 @@ services:
 
   agenda-cadastro:
     container_name: agenda-cadastro
+    restart: on-failure
     build: ./agenda-cadastro-server
     ports:
       - "9092:9092"
@@ -48,22 +51,23 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: root
 
-  dashboard-server:
-    container_name: dashboard-server
-    build: ./agenda-cadastro-dashboard-server
-    ports:
-      - "9093:9093"
-    depends_on:
-      - config-server
-      - eureka-server
-      - agenda-cadastro
-    links:
-      - config-server
-      - eureka-server
-      - agenda-cadastro
+  # dashboard-server:
+  #   container_name: dashboard-server
+  #   build: ./agenda-cadastro-dashboard-server
+  #   ports:
+  #     - "9093:9093"
+  #   depends_on:
+  #     - config-server
+  #     - eureka-server
+  #     - agenda-cadastro
+  #   links:
+  #     - config-server
+  #     - eureka-server
+  #     - agenda-cadastro
     
   gateway-server:
     container_name: gateway-server
+    restart: on-failure
     build: ./agenda-gateway-server
     ports:
       - "9094:9094"
@@ -71,12 +75,12 @@ services:
       - config-server
       - eureka-server
       - agenda-cadastro
-      - dashboard-server
+#      - dashboard-server
     links:
       - config-server
       - eureka-server
       - agenda-cadastro
-      - dashboard-server
+#      - dashboard-server
 
 volumes:
   dbdata:
