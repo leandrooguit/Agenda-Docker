@@ -1,23 +1,16 @@
-version: '3'
-services:
-  mysqldb:
-    image: mysql:5.7
-    container_name: mysqldb
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_USER: root
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: agenda-cadastro
-    volumes:
-      - dbdata:/var/lib/mysql
-  
+version: '2.1'
+services: 
   config-server:
     container_name: config-server
     build: ./agenda-config-server
     restart: on-failure
     ports:
       - "9090:9090"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/agenda-eureka-server/default"]
+      interval: 45s
+      timeout: 5s
+      retries: 60
   
   eureka-server:
     container_name: eureka-server
@@ -26,9 +19,15 @@ services:
     ports:
       - "9091:9091"
     depends_on:
-      - config-server
+      config-server:
+        condition: service_healthy
     links:
       - config-server
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091"]
+      interval: 60s
+      timeout: 5s
+      retries: 60
 
   agenda-cadastro:
     container_name: agenda-cadastro
@@ -37,33 +36,18 @@ services:
     ports:
       - "9092:9092"
     depends_on:
-      - config-server
-      - eureka-server
-      - mysqldb
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
     links:
       - config-server
       - eureka-server
-      - mysqldb
-    environment:
-      DB_PORT: 3306
-      DB_HOST: mysqldb
-      DB_DATABASE: agenda-cadastro
-      DB_USERNAME: root
-      DB_PASSWORD: root
-
-  # dashboard-server:
-  #   container_name: dashboard-server
-  #   build: ./agenda-cadastro-dashboard-server
-  #   ports:
-  #     - "9093:9093"
-  #   depends_on:
-  #     - config-server
-  #     - eureka-server
-  #     - agenda-cadastro
-  #   links:
-  #     - config-server
-  #     - eureka-server
-  #     - agenda-cadastro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9092/api/v1/contatos"]
+      interval: 60s
+      timeout: 5s
+      retries: 60
     
   gateway-server:
     container_name: gateway-server
@@ -72,15 +56,13 @@ services:
     ports:
       - "9094:9094"
     depends_on:
-      - config-server
-      - eureka-server
-      - agenda-cadastro
-#      - dashboard-server
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      agenda-cadastro:
+        condition: service_healthy
     links:
       - config-server
       - eureka-server
       - agenda-cadastro
-#      - dashboard-server
-
-volumes:
-  dbdata:

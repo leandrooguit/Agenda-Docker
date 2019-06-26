@@ -6,6 +6,6 @@ RUN mvn -f /usr/src/app/pom.xml clean package -DskipTests
 FROM java:8-jdk
 RUN mkdir /app
 WORKDIR /app
-COPY --from=build_co /usr/src/app/target/agenda-config-server-0.0.1-SNAPSHOT.jar /app/agenda-config.jar
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/agenda-config.jar"]
+COPY --from=build_co /usr/src/app/target/config-server.jar /app/config-server.jar
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/config-server.jar"]
 EXPOSE 9090

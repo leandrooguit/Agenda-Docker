@@ -1,7 +1,6 @@
 package br.com.ufpe.agenda.model;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,13 +25,13 @@ public class Contato implements Serializable {
 	@EqualsAndHashCode.Include
 	private Integer id;
 	
-	@NotBlank(message = "error-2")
+	@NotNull(message = "O nome e obrigatorio.")
 	@Column(name = "Nome", length = 50, nullable = false)
 	private String nome;
 	
-	@Email
+	@Email(message = "O e-mail e invalido.")
     @Size(min = 0, max = 50)
-	@NotBlank(message = "error-3")
+	@NotNull(message = "O e-mail e obrigatorio.")
 	@Column(name = "Email", length = 50, nullable = false)
 	private String email;
 	
@@ -40,7 +39,7 @@ public class Contato implements Serializable {
 	@Column(name = "DataCadastro", nullable = false)
 	private Date dataCadastro;
 	
-	@NotNull(message = "error-4")
+	@NotNull(message = "O telefone e obrigatorio. Informe pelo menos um telefone.")
 	@OneToMany(mappedBy = "contato", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Telefone> telefones;
 

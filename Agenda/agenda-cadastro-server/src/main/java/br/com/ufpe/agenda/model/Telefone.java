@@ -28,11 +28,11 @@ public class Telefone implements Serializable {
 	@EqualsAndHashCode.Include
 	private Integer id;
 	
-	@NotNull(message = "O número é obrigatório.")
+	@NotNull(message = "O numero e obrigatorio.")
 	@Column(name = "Numero", nullable = false)
 	private Integer numero;
 	
-	@NotNull(message = "O ddd é obrigatório.")
+	@NotNull(message = "O ddd e obrigatorio.")
 	@Column(name = "DDD", nullable = false)
 	private Integer ddd;
 	

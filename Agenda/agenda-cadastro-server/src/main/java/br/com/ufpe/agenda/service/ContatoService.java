@@ -29,15 +29,6 @@ public class ContatoService {
         return contatoRepository.saveAndFlush(contato);
     }
 	
-	public void update(Contato contato) throws NegocioException {
-		Contato contatoBase = findById(contato.getId());
-		contatoBase.setNome(contato.getNome());
-		contatoBase.setEmail(contato.getEmail());
-		contatoBase.setDataCadastro(new Date());
-		contatoBase.getTelefones().addAll(contato.getTelefones());
-		contatoRepository.saveAndFlush(contato);
-	}
-	
 	public Contato findById(Integer id) throws NegocioException {
 		Optional<Contato> contato =  contatoRepository.findById(id);
 		
