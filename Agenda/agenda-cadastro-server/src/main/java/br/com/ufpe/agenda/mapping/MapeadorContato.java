@@ -33,7 +33,6 @@ public class MapeadorContato extends CustomMapper<Contato, ContatoDto> {
 	
 	@Override
 	public void mapBtoA(ContatoDto dto, Contato contato, MappingContext context) {
-		contato.setId(dto.getId());
 		contato.setNome(dto.getNome());
 		contato.setEmail(dto.getEmail());
 		List<Telefone> telefones = new ArrayList<Telefone>();
